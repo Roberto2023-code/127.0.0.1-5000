@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cuentas - Health Market</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="bg-dark text-white text-center p-4">
+        <a href="{{ url_for('inise') }}" class="btn btn-light btn-regresar">Regresar</a>
+        <h1 class="letra">Gestión de Cuentas</h1>
+    </header>
+
+    <div class="container mt-5">
+        <!-- Botón para abrir el modal -->
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#gestionCuentasModal">
+            Abrir Gestión de Cuentas
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="gestionCuentasModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Gestión de Cuentas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h2>Administradores</h2>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for admin in admins %}
+                                <tr>
+                                    <td>{{ admin['nombre'] }}</td>
+                                    <td>{{ admin['email'] }}</td>
+                                    <td>
+                                        <a href="/edit/admin/{{ admin['_id'] }}" class="btn btn-warning btn-sm">Editar</a>
+                                        <a href="/delete/{{ admin['_id'] }}" class="btn btn-danger btn-sm" onclick="return confirm('Gestión de Control dice:\n\n¿Estás seguro de eliminar este usuario?')">Eliminar</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <h2>Clientes</h2>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cliente in clientes %}
+                                <tr>
+                                    <td>{{ cliente['nombre'] }}</td>
+                                    <td>{{ cliente['email'] }}</td>
+                                    <td>
+                                        <a href="/edit/cliente/{{ cliente['_id'] }}" class="btn btn-warning btn-sm">Editar</a>
+                                        <a href="/delete/{{ cliente['_id'] }}" class="btn btn-danger btn-sm" onclick="return confirm('Gestión de Control dice:\n\n¿Estás seguro de eliminar este usuario?')">Eliminar</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <h2>Users</h2>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{ user['nombre'] }}</td>
+                                    <td>{{ user['email'] }}</td>
+                                    <td>
+                                        <a href="/edit/user/{{ user['_id'] }}" class="btn btn-warning btn-sm">Editar</a>
+                                        <a href="/delete/{{ user['_id'] }}" class="btn btn-danger btn-sm" onclick="return confirm('Gestión de Control dice:\n\n¿Estás seguro de eliminar este usuario?')">Eliminar</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- El resto de los formularios -->
+        <h2>Insertar Nuevo Admin</h2>
+        <form action="/insertAdmin" method="POST" class="mb-3">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar Admin</button>
+        </form>
+
+        <h2>Insertar Nuevo Cliente</h2>
+        <form action="/insertCliente" method="POST" class="mb-3">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" required>
+            </div>
+            <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input type="text" class="form-control" name="apellido" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" name="telefono">
+            </div>
+            <div class="mb-3">
+                <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                <input type="date" class="form-control" name="fecha_nacimiento">
+            </div>
+            <div class="mb-3">
+                <label for="genero" class="form-label">Género</label>
+                <select class="form-control" name="genero">
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar Cliente</button>
+        </form>
+
+        <h2>Insertar Nuevo User</h2>
+        <form action="/insertUser" method="POST" class="mb-3">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar User</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<style>
+    /* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+/* Tipografía */
+.letra {
+    color: #ddd;
+}
+
+h1 {
+    color: #333333;
+    font-size: 2rem;
+}
+
+h2 {
+    color: #007bff;
+    font-size: 1.5rem;
+}
+
+/* Tarjetas */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 15px;
+}
+
+/* Formularios */
+label {
+    font-weight: bold;
+    color: #444;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: none;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Botón de regreso dentro del header */
+.btn-regresar {
+    background-color: #343a40;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 80px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute; /* Hace que el botón se mantenga dentro del header */
+    left: 35px; /* Ajusta la posición a la izquierda */
+    top: 6.5%; /* Lo posiciona en el centro verticalmente */
+    transform: translateY(-50%); /* Ajusta el centrado vertical */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-regresar:hover {
+    background-color: white;
+    color: #343a40;
+    border: 2px solid #343a40;
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* Tablas */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #f8f9fa;
+}
+
+/* Diseño Responsivo */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    .form-control {
+        font-size: 0.9rem;
+    }
+}
+
+
+</style>

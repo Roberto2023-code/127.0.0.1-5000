@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Market - Suplementos y Bienestar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <link rel="stylesheet" href="css/estilos.css">
+    
+</head>
+<body>
+
+    <!-- Loader -->
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
+
+    <a href="{{ url_for('contactos') }}" class="contact-bubble">
+        Contáctanos 📞
+    </a>
+    
+    <header class="bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav text-center">
+                    {% if not nombre_usuario %} 
+                    <li class="nav-item">
+                        <a href="{{ url_for('insesion') }}" class="nav-link custom-nav-link">Iniciar Sesión</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item"><a href="{{ url_for('productos') }}" class="nav-link custom-nav-link">Productos</a></li>
+                    <li class="nav-item"><a href="{{ url_for('consultas') }}" class="nav-link custom-nav-link">Consultas</a></li>                    
+                    <li class="nav-item"><a href="#sobre-nosotros" class="nav-link custom-nav-link">Sobre Nosotros</a></li>
+                    <li class="nav-item"><a href="{{ url_for('plan_alimentacion') }}" class="nav-link custom-nav-link">Plan de alimentación personalizado</a></li>
+    
+                    <li class="nav-item">
+                        <form class="d-flex">
+                            <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
+                            <button class="btn btn-outline-success" type="submit">Buscar</button>
+                        </form>
+                    </li>
+                    <a href="carrito.html">
+                        <img src="{{ url_for('static', filename='img/carrito.jpg') }}" alt="Carrito" width="30" height="30">
+                        <span>Carrito</span>
+                    <!-- Mostrar el nombre del usuario si ha iniciado sesión -->
+                     <!-- Botón de Perfil -->
+                    <li class="nav-item d-flex align-items-center ms-4">
+                        {% if nombre_usuario %}
+                        <a href="#" class="me-4" data-bs-toggle="modal" data-bs-target="#perfilModal">
+                            <img src="{{ url_for('static', filename='img/OIP.jpg') }}" alt="Perfil" width="30" height="30">
+                            <span>{{ nombre_usuario }}</span>
+                        </a>
+                            </a>
+                            <a href="{{ url_for('cerrar_sesion') }}" class="btn btn-danger btn-sm ms-2">Cerrar Sesión</a>
+                        {% else %}
+                            <a href="{{ url_for('login') }}" class="me-4">
+                                <img src="{{ url_for('static', filename='img/OIP.jpg') }}" alt="Perfil" width="30" height="30">
+                                <span>Perfil</span>
+                            </a>
+                        {% endif %}
+                        </a>
+                        <div id="registro-alerta" class="alert alert-danger d-none" role="alert">
+                            No estás registrado. Por favor, inicia sesión o regístrate.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        
+        </div>
+    </nav>
+
+    <main class="container text-center mt-4">
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{{ url_for('static', filename='img/HEALTHMARKET.png') }}" class="d-block w-100" alt="Salud y bienestar">
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Sección de Bienvenidos -->
+    <section class="container mt-4">
+        <h3 class="text-center">Bienvenidos</h3>
+        <p class="text-center">En Health Market, nos apasiona tu bienestar. Descubre nuestra amplia gama de suplementos y productos saludables diseñados para mejorar tu calidad de vida.</p>
+    </section>
+
+    <!-- Sección de Productos Destacados -->
+    <section class="container mt-4">
+        <h3 class="text-center">Productos Destacados</h3>
+        <div class="row">
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/ProteínaWhey.png') }}" class="card-product-img" alt="Proteína premium">
+                    <div class="card-body">
+                        <h5 class="card-title">Proteína Premium</h5>
+                        <a href="{{ url_for('productos') }}"" class="btn btn-custom">Ver más</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/vitaminaABC.jpg') }}" class="card-product-img" alt="Vitaminas ABC">
+                    <div class="card-body">
+                        <h5 class="card-title">Vitaminas ABC</h5>
+                        <a href="{{ url_for('productos') }}" class="btn btn-custom">Ver más</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/ProteínaWhey.png') }}" class="card-product-img" alt="Proteína premium">
+                    <div class="card-body">
+                        <h5 class="card-title">Proteína Premium</h5>
+                        <a href="{{ url_for('productos') }}" class="btn btn-custom">Ver más</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Sobre Nosotros mejorada -->
+    <section id="sobre-nosotros"class="container mt-4">
+        <h3 class="text-center">Sobre Nosotros</h3>
+        <div class="row">
+            <div class="col-md-6 mission-values">
+                <h4>Nuestra Misión</h4>
+                <p>En Health Market, nuestra misión es proporcionar suplementos y productos saludables de alta calidad.</p>
+                <p>Salud y bienestar en cada suplemento, calidad en cada elección.</p>
+            </div>
+            <div class="col-md-6 mission-values">
+                <h4>Nuestros Valores</h4>
+                <ul>
+                    <li>Calidad</li>
+                    <li>Confianza</li>
+                    <li>Innovación</li>
+                    <li>Atención al cliente</li>
+                </ul>
+            </div>
+            <!-- Sección de Nuestro Nutriólogo -->
+    <h3 class="text-center">Nuestro Nutriólogo</h3>
+    <div class="row">
+        <div class="col-md-6 mission-values">
+            <h4>Conoce a Nuestro Especialista</h4>
+            
+            <p>Contamos con un <strong>nutriólogo certificado</strong> que te brindará asesoría profesional para alcanzar tus objetivos de salud.</p>
+    <p>Ya sea que busques <strong>perder peso, aumentar masa muscular o mejorar tu alimentación</strong>, nuestro experto te proporcionará un plan personalizado basado en tus necesidades.</p>
+    <ul>
+        <li>✅ Evaluación nutricional completa</li>
+        <li>✅ Plan de alimentación adaptado a tu estilo de vida</li>
+        <li>✅ Consejos prácticos para mejorar tus hábitos alimenticios</li>
+        <li>✅ Seguimiento personalizado para garantizar resultados</li>
+    </ul>
+    <p>¡Comienza hoy mismo tu transformación con la guía de un profesional!</p>
+        </div>
+        <div class="col-md-6 mission-values text-center">
+            <img src="{{ url_for('static', filename='img/nutriologojpg.jpg') }}" alt="Nutriólogo" class="img-fluid rounded">
+            <p class="mt-2"><strong>Dr. Nicolas cuevas</strong> - Especialista en nutrición y bienestar</p>
+            <a href="{{ url_for('consultas') }}" class="btn btn-custom">Agendar Consulta</a>
+        </div>
+    </div>
+    <div class="col-12 mt-4">
+        <h4>Acerca de Nosotros</h4>
+        <p>Health Market fue fundado con el objetivo de mejorar la salud y el bienestar de nuestros clientes a través de productos naturales y efectivos. 
+            Nos enorgullece ofrecer una amplia gama de suplementos y productos diseñados para satisfacer las necesidades de cada individuo. 
+            Nuestro equipo está compuesto por profesionales dedicados y apasionados que trabajan constantemente para
+    </section>
+
+
+    <!-- Modal de Perfil -->
+<div class="modal fade" id="perfilModal" tabindex="-1" aria-labelledby="perfilModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="perfilModalLabel">Tu Perfil</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Bienvenido, {{ nombre_usuario }}. ¿Quieres ver más detalles sobre tu perfil?</p>
+          <!-- Aquí puedes agregar más información sobre el usuario si lo deseas -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <a href="{{ url_for('perfilpp') }}" class="btn btn-primary">Ir a Mi Perfil</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+    // Simular la carga de la página
+    window.onload = function() {
+        setTimeout(() => {
+            document.querySelector('.loader-container').style.display = 'none';
+            document.querySelector('.content').style.display = 'block';
+        }, 2000); // Simulación de carga de 2 segundos
+    };
+    document.addEventListener("DOMContentLoaded", function () {
+        const nombreUsuario = "{{ nombre_usuario|default('', true) }}"; // Si no está definido, será una cadena vacía.
+        if (!nombreUsuario) {
+            const alerta = document.getElementById("registro-alerta");
+            alerta.classList.remove("d-none"); // Mostrar mensaje
+        }
+    });
+
+
+</script>
+
+<style>
+    .card-product-img {
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+    }
+
+    .carousel-item img {
+        max-height: 300px;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .btn-custom {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-custom:hover {
+        background-color: #218838;
+        transform: scale(1.05);
+    }
+
+    .contact-bubble {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #28a745;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 50px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    .contact-bubble:hover {
+        background-color: #218838;
+        transform: scale(1.1);
+    }
+
+    .mission-values {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .mission-values:hover {
+        transform: scale(1.05);
+    }
+
+    /* Estilos para la barra de navegación */
+    .navbar-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    .navbar-nav .nav-item .nav-link {
+        background: linear-gradient(135deg, rgba(105, 105, 105, 0.7) 0%, rgba(169, 169, 169, 0.7) 100%);
+        color: white !important;
+        padding: 10px 15px;
+        border-radius: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: background 0.3s ease;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover {
+        background: linear-gradient(135deg, rgba(169, 169, 169, 0.7) 0%, rgba(105, 105, 105, 0.7) 100%);
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Ajustar el formulario de búsqueda */
+    .navbar-nav .nav-item form {
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar-nav .nav-item input[type="search"] {
+        border-radius: 8px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        outline: none;
+    }
+
+    .navbar-nav .nav-item button {
+        margin-left: 5px;
+        border-radius: 8px;
+    }
+
+    html {
+    scroll-behavior: smooth;
+}
+
+    /* Estilos para el loader mejorado */
+    .loader-container {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .loader {
+        width: 70px;
+        height: 70px;
+        border: 8px solid rgba(255, 255, 255, 0.2);
+        border-top: 8px solid #61fa7b;
+        border-radius: 50%;
+        animation: spin 1s ease-in-out infinite;
+        box-shadow: 0px 0px 20px rgba(97, 250, 123, 0.8);
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .content {
+        display: none; /* Ocultar el contenido inicialmente */
+    }
+    
+    .perfil-bar {
+        position: relative;
+        text-decoration: none;
+        color: #000; /* Color del texto */
+    }
+
+    .perfil-bar::before {
+        content: '';
+        position: absolute;
+        top: -5px; /* Ajusta la distancia de la barra al enlace */
+        left: 0;
+        width: 100%;
+        height: 2px; /* Grosor de la barra */
+        background-color: #007bff; /* Color de la barra */
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .perfil-bar:hover::before {
+        transform: scaleX(1); /* La barra aparece al pasar el cursor */
+    }
+
+</style>
+
+<footer class="bg-dark text-white text-center p-3 mt-4">
+    <p>&copy; 2025 Health Market. Todos los derechos reservados.</p>
+    <p><a href="politicas.html" class="text-white">Política de Privacidad</a> | <a href="terminos.html" class="text-white">Términos y Condiciones</a></p>
+</footer>
+
+<!-- Bootstrap JS y dependencias -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>

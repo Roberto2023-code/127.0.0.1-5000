@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultas | Health Market</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+
+    <style>
+        /* Botón de regreso dentro del header */
+        .btn-regresar {
+            background-color: #343a40;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 80px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute; /* Hace que el botón se mantenga dentro del header */
+            left: 15px;
+            top: 50%; /* Lo centra verticalmente dentro del header */
+            transform: translateY(-50%); /* Ajusta el centrado vertical */
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-regresar:hover {
+            background-color: white;
+            color: #343a40;
+            border: 2px solid #343a40;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-50%) scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="bg-dark text-white text-center p-3 position-sticky">
+        <a href="{{ url_for('principal') }}" class="btn-regresar">Regresar</a>
+        <h1>Consulta con nuestro Nutriólogo</h1>
+    </header>
+
+    <main class="container mt-4">
+        <!-- Mostrar mensajes de éxito de Flask -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul>
+                    {% for category, message in messages %}
+                        {% if "consulta" in message|lower %}  {# Solo muestra mensajes relacionados con consultas #}
+                            <li class="alert alert-{{ category }}">{{ message }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center">
+                <img src="{{ url_for('static', filename='img/nutriologojpg.jpg') }}" alt="Nutriólogo" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-md-6">
+                <h3 class="text-success">Dr. Nicolas Cuevas - Nutricionista</h3>
+                <p class="text-muted">Especialista en alimentación saludable y rendimiento deportivo. Te ayudamos a mejorar tu bienestar con una dieta equilibrada.</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">✔ Planes de alimentación personalizados</li>
+                    <li class="list-group-item">✔ Asesoramiento en suplementos</li>
+                    <li class="list-group-item">✔ Control de peso</li>
+                    <li class="list-group-item">✔ Consultas online y presenciales</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3 class="text-center text-primary mt-4">Agenda tu consulta</h3>
+        <form class="mt-3 p-4 rounded shadow bg-light" id="consultaForm" method="POST" action="{{ url_for('agregar_consulta') }}" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Nombre Completo</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Número de Teléfono</label>
+                <input type="tel" class="form-control" id="telefono" name="telefono" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Fecha de Consulta</label>
+                <input type="date" class="form-control" id="fecha" name="fecha_consulta" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Hora de Consulta</label>
+                <input type="time" class="form-control" id="hora" name="hora_consulta" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Mensaje o requerimientos</label>
+                <textarea class="form-control" id="mensaje" name="mensaje" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Historial Médico (opcional)</label>
+                <input type="file" class="form-control" id="historial_medico" name="historial_medico" accept=".pdf, .jpg, .jpeg, .png, .docx">
+            </div>
+            <button type="submit" class="btn btn-success w-100" id="btnEnviar">Solicitar Consulta</button>
+        </form>
+
+        <!-- Mensaje de éxito simulado después de enviar el formulario -->
+        <div id="mensajeExito" class="alert alert-success mt-3 d-none" role="alert">
+            ¡Consulta registrada con éxito! Nos pondremos en contacto contigo pronto.
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white text-center p-3 mt-4">
+        <p>&copy; 2025 Health Market. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.getElementById("consultaForm").addEventListener("submit", function (event) {
+            let campos = ["nombre", "email", "telefono", "fecha_consulta", "hora_consulta", "mensaje"];
+            let formularioValido = true;
+
+            campos.forEach(id => {
+                let input = document.getElementById(id);
+                if (input.value.trim() === "") {
+                    input.classList.add("border", "border-danger");
+                    formularioValido = false;
+                } else {
+                    input.classList.remove("border", "border-danger");
+                }
+            });
+
+            if (!formularioValido) {
+                event.preventDefault();
+            } else {
+                let btnEnviar = document.getElementById("btnEnviar");
+                btnEnviar.disabled = true;
+
+                // Simula un envío exitoso y muestra el mensaje
+                setTimeout(() => {
+                    btnEnviar.disabled = false;
+                    document.getElementById("consultaForm").reset();
+                    let mensajeExito = document.getElementById("mensajeExito");
+
+                    // Mostrar el mensaje de éxito
+                    mensajeExito.classList.remove("d-none");
+
+                    // Desaparecer el mensaje después de 3 segundos
+                    setTimeout(() => {
+                        mensajeExito.classList.add("d-none"); // Ocultar mensaje de éxito
+                    }, 3000); // 3000 ms = 3 segundos
+                }, 1000); // Simula el retraso antes de mostrar el mensaje de éxito
+            }
+        });
+
+        document.getElementById("historial_medico").addEventListener("change", function () {
+            const archivo = this.files[0];
+            if (archivo) {
+                const formatosPermitidos = ["application/pdf", "image/jpeg", "image/png", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+                const maxSize = 2 * 1024 * 1024;
+                if (!formatosPermitidos.includes(archivo.type) || archivo.size > maxSize) {
+                    alert("Formato o tamaño de archivo no permitido. Máximo 2MB.");
+                    this.value = "";
+                }
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let fechaConsulta = document.getElementById("fecha_consulta");
+            let today = new Date().toISOString().split("T")[0];
+            fechaConsulta.setAttribute("min", today);
+        });
+    </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let flashMessages = document.querySelectorAll(".alert");
+        setTimeout(function() {
+            flashMessages.forEach(msg => msg.remove());  // Elimina los mensajes flash
+        }, 3000); // Después de 3 segundos
+    });
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Consultas</title>
+    <!-- Agregar Bootstrap o tu CSS si lo necesitas -->
+</head>
+<body>
+    <h1>Gestión de Consultas Médicas</h1>
+    
+    <!-- Formulario para agregar una nueva consulta -->
+    <form action="{{ url_for('insertConsulta') }}" method="POST">
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" name="telefono" required>
+        </div>
+        <div>
+            <label for="fecha">Fecha de Consulta:</label>
+            <input type="date" id="fecha" name="fecha" required>
+        </div>
+        <div>
+            <label for="hora">Hora de Consulta:</label>
+            <input type="time" id="hora" name="hora" required>
+        </div>
+        <div>
+            <label for="mensaje">Mensaje:</label>
+            <textarea id="mensaje" name="mensaje" required></textarea>
+        </div>
+        <div>
+            <label for="historial_medico">Historial Médico:</label>
+            <input type="file" id="historial_medico" name="historial_medico">
+        </div>
+        <div>
+            <button type="submit">Registrar Consulta</button>
+        </div>
+    </form>
+
+    <hr>
+
+    <!-- Mostrar las consultas ya registradas -->
+    <h2>Consultas Registradas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Mensaje</th>
+                <th>Historial Médico</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for consulta in consultas %}
+            <tr>
+                <td>{{ consulta.nombre }}</td>
+                <td>{{ consulta.email }}</td>
+                <td>{{ consulta.telefono }}</td>
+                <td>{{ consulta.fecha_consulta }}</td>
+                <td>{{ consulta.hora_consulta }}</td>
+                <td>{{ consulta.mensaje }}</td>
+                <td>
+                    {% if consulta.historial_medico %}
+                        <a href="{{ url_for('static', filename=consulta.historial_medico.split('static/')[1]) }}" target="_blank">Ver Historial</a>
+                    {% else %}
+                        No disponible
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('edit_consulta', consulta_id=consulta._id) }}">Editar</a>
+                    <form action="{{ url_for('delete_consulta', consulta_id=consulta._id) }}" method="POST">
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/HEALTHMARKET.png') }}"/>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="content">
+        <div class="wrapper">
+            <form action="{{ url_for('login') }}" method="POST">
+                <h1>Iniciar Sesión</h1>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <div class="input-box">
+                    <input type="email" placeholder="Correo Electrónico" required name="correo_electronico">
+                    <i class='bx bxs-envelope'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Contraseña" required name="contrasena">
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <button type="submit" class="btn">Iniciar Sesión</button>
+                <div class="register-link"> 
+                    <p>¿No tienes una cuenta? <a href="{{ url_for('registro') }}">Regístrate</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Simular la carga de la página
+        window.onload = function() {
+            setTimeout(() => {
+                document.querySelector('.loader-container').style.display = 'none';
+                document.querySelector('.content').style.display = 'block';
+            }, 2000); // Simulación de carga de 2 segundos
+        };
+    </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(function() {
+            let flashMessages = document.querySelectorAll(".flash");
+            flashMessages.forEach(msg => msg.remove()); // Elimina los mensajes del DOM
+        }, 3000); // Espera 3 segundos antes de eliminarlos
+    });
+</script>
+</body>
+</html>
+
+
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url("{{ url_for('static', filename='img/HEALTHMARKET.png') }}") no-repeat center center/cover;
+}
+
+
+        .wrapper {
+            width: 400px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .wrapper h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-box input {
+            width: 100%;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            font-size: 16px;
+            color: #fff;
+            padding: 10px 40px 10px 10px;
+            outline: none;
+        }
+
+        .input-box input::placeholder {
+            color: #ccc;
+        }
+
+        .input-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ccc;
+            font-size: 18px;
+        }
+
+        .btn {
+            width: 100%;
+            height: 45px;
+            background: #61fa7b;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .register-link {
+            margin-top: 15px;
+        }
+
+        .register-link p {
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #00aaff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilos para el loader mejorado */
+    .loader-container {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .loader {
+        width: 70px;
+        height: 70px;
+        border: 8px solid rgba(255, 255, 255, 0.2);
+        border-top: 8px solid #61fa7b;
+        border-radius: 50%;
+        animation: spin 1s ease-in-out infinite;
+        box-shadow: 0px 0px 20px rgba(97, 250, 123, 0.8);
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .content {
+        display: none; /* Ocultar el contenido inicialmente */
+    }
+    </style>

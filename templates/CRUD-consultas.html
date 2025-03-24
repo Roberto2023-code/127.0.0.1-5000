@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Consultas | Health Market</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body { background-color: #f8f9fa; }
+        .sidebar {
+            width: 200px;
+            background-color: #343a40;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .sidebar h4 { text-align: center; margin-bottom: 20px; }
+        .sidebar .nav-link { color: white; margin: 5px 0; }
+        .sidebar .nav-link:hover {
+            background-color: #495057;
+            border-radius: 5px;
+        }
+        .container { padding: 30px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { font-weight: bold; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+        .btn-primary { font-size: 0.9rem; background-color: #007bff; border-color: #007bff; }
+        .table thead { background-color: #e9ecef; }
+        .btn-warning { font-size: 0.9rem; background-color: #ffc107; }
+        .btn-danger { font-size: 0.9rem; background-color: #dc3545; }
+        table { width: 100%; border-collapse: collapse; }
+        table th, table td { padding: 10px; border: 1px solid #ddd; }
+        table th { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar de navegación -->
+        <div class="sidebar d-flex flex-column">
+            <h4>Menú</h4>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a href="{{ url_for('sesion') }}" class="nav-link">Regresar</a></li>
+                <li class="nav-item"><a href="{{ url_for('crud_consulta') }}" class="nav-link">Citas</a></li>
+            </ul>
+        </div>
+
+        <div class="container">
+            <h2>Gestión de Consultas Médicas</h2>
+            
+            <!-- Formulario para agregar una nueva consulta -->
+            <form action="{{ url_for('crud_consulta') }}" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="tel" id="telefono" name="telefono" required>
+                </div>
+                <div class="form-group">
+                    <label for="fecha">Fecha de Consulta:</label>
+                    <input type="date" id="fecha" name="fecha" required>
+                </div>
+                <div class="form-group">
+                    <label for="hora">Hora de Consulta:</label>
+                    <input type="time" id="hora" name="hora" required>
+                </div>
+                <div class="form-group">
+                    <label for="mensaje">Mensaje:</label>
+                    <textarea id="mensaje" name="mensaje" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="historial_medico">Historial Médico:</label>
+                    <input type="file" id="historial_medico" name="historial_medico">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Registrar Consulta</button>
+                </div>
+            </form>
+
+            <hr>
+
+            <!-- Mostrar las consultas ya registradas -->
+            <h2>Consultas Registradas</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Mensaje</th>
+                        <th>Historial Médico</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consulta in consultas %}
+                    <tr>
+                        <td>{{ consulta['nombre'] }}</td>
+                        <td>{{ consulta['email'] }}</td>
+                        <td>{{ consulta['telefono'] }}</td>
+                        <td>{{ consulta['fecha_consulta'] }}</td>
+                        <td>{{ consulta['hora_consulta'] }}</td>
+                        <td>{{ consulta['mensaje'] }}</td>
+                        <td>
+                            {% if consulta['historial_medico'] %}
+                                {% set file_ext = consulta['historial_medico'].split('.')[-1].lower() %}
+                                {% if file_ext in ['png', 'jpg', 'jpeg', 'pdf'] %}
+                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalHistorial"
+                                            id="verHistorialBtn{{ loop.index }}" data-url="{{ url_for('uploaded_file', filename=consulta['historial_medico']) }}"
+                                            data-ext="{{ file_ext }}">
+                                        Ver Historial
+                                    </button>
+                                {% elif file_ext == 'docx' %}
+                                    <a href="{{ url_for('uploaded_file', filename=consulta['historial_medico']) }}" download class="btn btn-success btn-sm">
+                                        Descargar
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                No disponible
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('edit_consulta', consulta_id=consulta['_id']) }}" class="btn btn-warning btn-sm">Editar</a>
+                            <form action="{{ url_for('delete_consulta', consulta_id=consulta['_id']) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar esta consulta?')">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para visualizar historial -->
+    <div class="modal fade" id="modalHistorial" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Historial Médico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center" id="historialContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Agregar el evento para mostrar el historial en el modal
+        document.querySelectorAll('[id^="verHistorialBtn"]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var url = this.getAttribute('data-url');
+                var ext = this.getAttribute('data-ext');
+                var content = ext === 'pdf' ? `<embed src="${url}" width="100%" height="500px">` : `<img src="${url}" class="img-fluid">`;
+                document.getElementById('historialContent').innerHTML = content;
+            });
+        });
+    </script>
+</body>
+</html>
